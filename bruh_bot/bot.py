@@ -3,6 +3,7 @@ import hikari
 import lightbulb
 import time
 import random
+import string
 
 bot = lightbulb.BotApp(
     os.environ['TOKEN'], 
@@ -30,6 +31,8 @@ phrases = [
     'Eu amo você meu amor'
 ]
 
+bad_words = ['chuj', 'dupa', 'kurwa', 'cipa']
+
 @bot.command()
 @lightbulb.command('bruh', 'says brooh')
 @lightbulb.implements(lightbulb.SlashCommand)
@@ -47,10 +50,38 @@ async def cmd_say(context: lightbulb.SlashCommand):
 @lightbulb.command('kocham', 'say kocham several times')
 @lightbulb.implements(lightbulb.SlashCommand)
 async def love_ya(context): 
-    while True:
-        number = random.randint(0, len(phrases)-1)
-        await context.respond(f'{phrases[number]}')
-        time.sleep(15)
+    number = random.randint(0, len(phrases)-1)
+    await context.respond(f'{phrases[number]}', os.environ['USER_ID'])
+
+@bot.listen()
+async def jajco(event: hikari.GuildMessageCreateEvent) -> None:
+    if event.is_bot or not event.content:
+        return
+    words = event.content.split()
+    for word in words:
+        if word.lower().translate(str.maketrans('', '', string.punctuation)) == 'co':
+            await bot.rest.create_message(int(os.environ['CHANNEL_ID']), 'jajco')
+            break
+
+@bot.listen()
+async def bruh(event: hikari.GuildMessageCreateEvent) -> None:
+    if event.is_bot or not event.content:
+        return
+    words = event.content.split()
+    for word in words:
+        if word.lower() == 'bruh':
+            await bot.rest.create_message(int(os.environ['CHANNEL_ID']), 'bruh')
+            break
+
+@bot.listen()
+async def chuj(event: hikari.GuildMessageCreateEvent) -> None:
+    if event.is_bot or not event.content:
+        return
+    words = event.content.split()
+    for word in words:
+        if word in bad_words:
+            await bot.rest.create_message(int(os.environ['CHANNEL_ID']), 'you\'ve been banned from mickey mouse club for inappropriate behavior')
+            break
 
 def run():
     bot.run()
