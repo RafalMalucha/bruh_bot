@@ -12,9 +12,6 @@ bot = lightbulb.BotApp(
     )
 
 phrases = [
-    'Kocham Cię najbardziej',
-    'Kocham Cię najmocniej',
-    'Kocham Cię najbardziej i najmocniej',
     'Je t\'aime',
     'Ich liebe dich',
     'Ik houd van jou',
